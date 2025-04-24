@@ -1,10 +1,23 @@
+import { compileDatapack, exportZip } from './compiler.js';
 import { perks } from './perks/index.js';
+
+const selectedPerks = new Set();
+const settings = {};
 
 // Dynamically render perk cards
 function renderPerkCard(perk, containerId) {
   const card = document.createElement("section");
   card.className = "perk-card";
-  card.onclick = () => card.classList.toggle("selected");
+  card.onclick = () => {
+    card.classList.toggle("selected");
+  
+    if (card.classList.contains("selected")) {
+      selectedPerks.add(perk.id);
+    } else {
+      selectedPerks.delete(perk.id);
+    }
+  };
+  
 
   const hasSettings = Array.isArray(perk.settings) && perk.settings.length > 0;
 
@@ -29,6 +42,10 @@ function renderPerkCard(perk, containerId) {
   `;
 
   card.querySelector(".perk-info").appendChild(customizeBtn);
+
+  if (selectedPerks.has(perk.id)) {
+    card.classList.add("selected");
+  }  
 
   document.getElementById(containerId).appendChild(card);
 }
@@ -137,6 +154,30 @@ function customizePerk(id) {
     }
   });
 
+    // After form is populated, apply any saved values
+  const saved = settings[id] || {};
+  for (const key in saved) {
+    const el = form.querySelector(`#${key}`);
+    if (el) {
+      if (el.type === "checkbox") {
+        el.checked = saved[key];
+      } else {
+        el.value = saved[key];
+        if (el.type === "range") {
+          const valueLabel = document.getElementById(`${key}-value`);
+          if (valueLabel) valueLabel.textContent = saved[key];
+        }
+      }
+    }
+
+    // Handle radios separately
+    const radios = form.querySelectorAll(`input[type="radio"][name="${key}"]`);
+    radios.forEach(radio => {
+      radio.checked = radio.value === saved[key];
+    });
+  }
+
+
   document.getElementById('customization-overlay').classList.remove('hidden');
 }
 
@@ -162,6 +203,11 @@ document.querySelectorAll('.category-header').forEach(header => {
   });
 });
 
+document.querySelector(".export-btn").addEventListener("click", async () => {
+  const files = await compileDatapack(perks, [...selectedPerks], settings);
+  exportZip(files);
+});
+
 // Tab switching logic
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -176,11 +222,21 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // Fix: Overlay close button event (after DOM is ready)
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('close-overlay').addEventListener('click', () => {
-    document.getElementById('customization-overlay').classList.add('hidden');
-  });
-
-  // Close overlay
-  document.getElementById('close-overlay').addEventListener('click', () => {
+    const perkId = document.getElementById("customization-title").textContent.toLowerCase().replace(/\s+/g, "_");
+    const form = document.getElementById("customization-form");
+  
+    if (!settings[perkId]) settings[perkId] = {};
+  
+    form.querySelectorAll("input, textarea").forEach(input => {
+      if (input.type === "checkbox") {
+        settings[perkId][input.id] = input.checked;
+      } else if (input.type === "radio") {
+        if (input.checked) settings[perkId][input.name] = input.value;
+      } else {
+        settings[perkId][input.id] = input.value;
+      }
+    });
+  
     document.getElementById('customization-overlay').classList.add('hidden');
   });
 

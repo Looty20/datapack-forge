@@ -37,7 +37,8 @@ import playerAttributes from './players/player_attributes.js';
 import enemyCardExample from './enemies/enemy_card_example.js';
 
 // === Other ===
-import otherCardExample from './other/other_card_example.js';
+import welcomeMessage from './other/welcome_message.js';
+import worldBorder from './other/world_border.js';
 
 export const perks = [
   // Recipes
@@ -79,5 +80,6 @@ export const perks = [
   enemyCardExample,
 
   // Other
-  otherCardExample
+  welcomeMessage,
+  worldBorder
 ];
