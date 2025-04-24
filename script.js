@@ -54,130 +54,80 @@ function customizePerk(id) {
   const perk = perks.find(p => p.id === id);
   if (!perk) return;
 
-  document.getElementById('customization-title').textContent = perk.name;
-  document.getElementById('customization-description').textContent = perk.description;
+  // Ensure default values are initialized for accurate change tracking
+  if (!settings[id]) settings[id] = {};
+  for (const s of perk.settings || []) {
+    if (settings[id][s.id] === undefined) settings[id][s.id] = s.default;
+  }
 
   const form = document.getElementById("customization-form");
   form.innerHTML = "";
 
-  (perk.settings || []).forEach(setting => {
+  for (const setting of perk.settings || []) {
     const group = document.createElement("div");
     group.className = "form-group";
 
+    let inputHTML = "";
+
+    const currentValue = settings[id][setting.id];
+
     if (setting.type === "slider") {
       const sliderId = `${setting.id}-value`;
-      group.innerHTML = `
-        <label for="${setting.id}" style="display: flex; justify-content: space-between; align-items: center;">
-          <span>${setting.label}:</span>
-          <span id="${sliderId}">${setting.default}</span>
+      inputHTML = `
+        <label for="${setting.id}" style="display:flex; justify-content:space-between;">
+          <span>${setting.label}</span>
+          <span id="${sliderId}">${currentValue}</span>
         </label>
         <div class="slider-wrapper">
-          <input type="range" id="${setting.id}" min="${setting.min}" max="${setting.max}" step="${setting.step}" value="${setting.default}">
-        </div>
-      `;
-      form.appendChild(group);
-      setTimeout(() => {
-        const slider = document.getElementById(setting.id);
-        const valueLabel = document.getElementById(sliderId);
-        slider.addEventListener("input", () => {
-          valueLabel.textContent = slider.value;
-        });
-      });
-    }
-
-    else if (setting.type === "text") {
-      group.innerHTML = `
-        <label for="${setting.id}">${setting.label}:</label>
-        <input type="text" id="${setting.id}" placeholder="${setting.placeholder || ''}" value="${setting.default || ''}">
-      `;
-      form.appendChild(group);
-    }
-
-    else if (setting.type === "number") {
-      group.innerHTML = `
-        <label for="${setting.id}">${setting.label}:</label>
-        <input type="number" id="${setting.id}" 
-               value="${setting.default || 0}" 
-               min="${setting.min || ''}" 
-               max="${setting.max || ''}" 
-               step="${setting.step || 1}">
-      `;
-      form.appendChild(group);
-    }
-
-    else if (setting.type === "checkbox") {
-      group.innerHTML = `
+          <input type="range" id="${setting.id}" min="${setting.min}" max="${setting.max}" step="${setting.step}" value="${currentValue}">
+        </div>`;
+    } else if (setting.type === "number") {
+      inputHTML = `
+        <label for="${setting.id}">${setting.label}</label>
+        <input type="number" id="${setting.id}" value="${currentValue}" min="${setting.min}" max="${setting.max}" step="${setting.step}">`;
+    } else if (setting.type === "text") {
+      inputHTML = `
+        <label for="${setting.id}">${setting.label}</label>
+        <input type="text" id="${setting.id}" value="${currentValue}" placeholder="${setting.placeholder || ''}">`;
+    } else if (setting.type === "textarea") {
+      inputHTML = `
+        <label for="${setting.id}">${setting.label}</label>
+        <textarea id="${setting.id}" rows="${setting.rows || 4}" placeholder="${setting.placeholder || ''}">${currentValue}</textarea>`;
+    } else if (setting.type === "checkbox") {
+      inputHTML = `
         <label class="checkbox-wrapper">
-          <input type="checkbox" id="${setting.id}" ${setting.default ? 'checked' : ''}/>
+          <input type="checkbox" id="${setting.id}" ${currentValue ? "checked" : ""}>
           <span>${setting.label}</span>
-        </label>
-      `;
-      form.appendChild(group);
-    }
-
-    else if (setting.type === "radio") {
-      group.innerHTML = `<label>${setting.label}</label>`;
-      setting.options.forEach(opt => {
-        const radioId = `${setting.id}_${opt.value}`;
-        group.innerHTML += `
+        </label>`;
+    } else if (setting.type === "radio") {
+      inputHTML = `<label>${setting.label}</label>` + 
+        setting.options.map(opt => `
           <label class="radio-wrapper">
-            <input type="radio" name="${setting.id}" id="${radioId}" value="${opt.value}"
-              ${opt.value === setting.default ? 'checked' : ''}>
+            <input type="radio" name="${setting.id}" value="${opt.value}" ${opt.value === currentValue ? "checked" : ""}>
             <span>${opt.label}</span>
-          </label>
-        `;
+          </label>`).join('');
+    } else if (setting.type === "section") {
+      inputHTML = `<strong style="display:block; margin-top:1em;">${setting.text}</strong>`;
+    } else if (setting.type === "note") {
+      inputHTML = `<p style="opacity: 0.75; font-size: 0.85rem;">${setting.text}</p>`;
+    } else if (setting.type === "separator") {
+      inputHTML = `<hr style="border-color: #415a77;">`;
+    }
+
+    group.innerHTML = inputHTML;
+    form.appendChild(group);
+
+    if (setting.type === "slider") {
+      const slider = document.getElementById(setting.id);
+      const valueLabel = document.getElementById(`${setting.id}-value`);
+      slider.addEventListener("input", () => {
+        if (valueLabel) valueLabel.textContent = slider.value;
       });
-      form.appendChild(group);
     }
-
-    else if (setting.type === "textarea") {
-      group.innerHTML = `
-        <label for="${setting.id}">${setting.label}:</label>
-        <textarea id="${setting.id}" rows="${setting.rows || 4}" placeholder="${setting.placeholder || ''}">${setting.default || ''}</textarea>
-      `;
-      form.appendChild(group);
-    }
-
-    else if (setting.type === "section") {
-      group.innerHTML = `<strong style="display:block; margin-top:1em;">${setting.text}</strong>`;
-      form.appendChild(group);
-    }
-
-    else if (setting.type === "note") {
-      group.innerHTML = `<p style="margin: 0.5em 0; font-size: 0.85rem; opacity: 0.75;">${setting.text}</p>`;
-      form.appendChild(group);
-    }
-
-    else if (setting.type === "separator") {
-      group.innerHTML = `<hr style="border-color: #415a77;">`;
-      form.appendChild(group);
-    }
-  });
-
-    // After form is populated, apply any saved values
-  const saved = settings[id] || {};
-  for (const key in saved) {
-    const el = form.querySelector(`#${key}`);
-    if (el) {
-      if (el.type === "checkbox") {
-        el.checked = saved[key];
-      } else {
-        el.value = saved[key];
-        if (el.type === "range") {
-          const valueLabel = document.getElementById(`${key}-value`);
-          if (valueLabel) valueLabel.textContent = saved[key];
-        }
-      }
-    }
-
-    // Handle radios separately
-    const radios = form.querySelectorAll(`input[type="radio"][name="${key}"]`);
-    radios.forEach(radio => {
-      radio.checked = radio.value === saved[key];
-    });
   }
 
-
+  document.getElementById('customization-title').textContent = perk.name;
+  document.getElementById('customization-description').textContent = perk.description;
   document.getElementById('customization-overlay').classList.remove('hidden');
 }
 
@@ -224,19 +174,29 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('close-overlay').addEventListener('click', () => {
     const perkId = document.getElementById("customization-title").textContent.toLowerCase().replace(/\s+/g, "_");
     const form = document.getElementById("customization-form");
-  
+
     if (!settings[perkId]) settings[perkId] = {};
-  
+
     form.querySelectorAll("input, textarea").forEach(input => {
+      let newValue;
+
       if (input.type === "checkbox") {
-        settings[perkId][input.id] = input.checked;
+        newValue = input.checked;
       } else if (input.type === "radio") {
-        if (input.checked) settings[perkId][input.name] = input.value;
+        if (!input.checked) return;
+        newValue = input.value;
       } else {
-        settings[perkId][input.id] = input.value;
+        newValue = input.value;
       }
+
+      const key = input.name || input.id;
+
+      // Simply store without comparison or triggering selection
+      settings[perkId][key] = input.type === "checkbox" ? input.checked :
+                              input.type === "number" ? Number(input.value) :
+                              input.value;
     });
-  
+
     document.getElementById('customization-overlay').classList.add('hidden');
   });
 
