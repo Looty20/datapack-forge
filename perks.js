@@ -1,6 +1,67 @@
 const perks = [
     // === RECIPES ===
     {
+      id: "debug_card",
+      name: "This Is A Debug Card",
+      description: "A description goes here. It should truncate if it doesn't fit on two lines and hopefully, the button beneath it should adjust accordingly. However, if you click on the button, a window should open, where the whole text can be seen without an issue.",
+      icon: "⚙️",
+      category: "recipes",
+      settings: [
+        { type: "section", text: "Test Section Header" },
+        { type: "note", text: "This is a note for developers." },
+        {
+          type: "slider",
+          id: "debug_slider",
+          label: "Debug Slider",
+          min: 0,
+          max: 100,
+          step: 1,
+          default: 50
+        },
+        {
+          type: "text",
+          id: "debug_text",
+          label: "Debug Text",
+          placeholder: "Enter something",
+          default: "Hello world"
+        },
+        {
+          type: "number",
+          id: "debug_number",
+          label: "Debug Number",
+          default: 42,
+          min: 0,
+          max: 100
+        },
+        {
+          type: "checkbox",
+          id: "debug_checkbox",
+          label: "Enable Debug Mode",
+          default: true
+        },
+        {
+          type: "radio",
+          id: "debug_radio",
+          label: "Debug Mode Options",
+          default: "alpha",
+          options: [
+            { label: "Alpha", value: "alpha" },
+            { label: "Beta", value: "beta" },
+            { label: "Gamma", value: "gamma" }
+          ]
+        },
+        {
+          type: "textarea",
+          id: "debug_textarea",
+          label: "Debug Notes",
+          placeholder: "Write your notes here...",
+          default: "This is a test card.\nMultiline textarea test."
+        },
+        { type: "separator" },
+        { type: "note", text: "End of settings for testing block." }
+      ]
+    },
+    {
       id: "craftable_saddle",
       name: "Craftable Saddle",
       description: "Allows crafting of saddles using leather and iron.",
@@ -230,10 +291,64 @@ const perks = [
       category: "tweaks"
     },
     {
-      id: "smooth_random_tick",
-      name: "Smoother Random Ticks",
-      description: "Spreads random ticks more evenly for farms.",
-      icon: "⚙️",
-      category: "tweaks"
+      id: "auto_breeding",
+      name: "Passionate Livestock",
+      description: "Animals breed automatically when they have enough food.",
+      icon: "❤️‍🔥🐄",
+      category: "tweaks",
+      settings: [
+        {
+          type: "section",
+          text: "Auto-Breeding Settings"
+        },
+        {
+          type: "slider",
+          id: "breeding_range",
+          label: "Detection Range (blocks)",
+          min: 1,
+          max: 16,
+          step: 1,
+          default: 8
+        },
+        {
+          type: "number",
+          id: "food_threshold",
+          label: "Food Threshold per Animal",
+          default: 3,
+          min: 1,
+          max: 10
+        },
+        {
+          type: "radio",
+          id: "breeding_mode",
+          label: "Breeding Mode",
+          default: "proximity",
+          options: [
+            { label: "Proximity-based", value: "proximity" },
+            { label: "Inventory-based", value: "inventory" },
+            { label: "Always Active", value: "always" }
+          ]
+        },
+        {
+          type: "checkbox",
+          id: "enable_cooldown",
+          label: "Enable Breeding Cooldown",
+          default: true
+        },
+        {
+          type: "number",
+          id: "cooldown_seconds",
+          label: "Cooldown Duration (seconds)",
+          default: 60,
+          min: 10,
+          max: 600,
+          step: 10
+        },
+        {
+          type: "note",
+          text: "The cooldown only applies if 'Enable Breeding Cooldown' is checked."
+        }
+      ]
     }
+    
   ];
