@@ -1,0 +1,46 @@
+{
+      id: "craftable_saddle",
+      name: "Craftable Saddle",
+      description: "Allows crafting of saddles using leather and iron.",
+      icon: "🐎",
+      category: "recipes",
+      settings: [
+        {
+          type: "slider",
+          id: "cooldown",
+          label: "Cooldown (seconds)",
+          min: 1,
+          max: 30,
+          step: 1,
+          default: 5
+        },
+        {
+          type: "text",
+          id: "customName",
+          label: "Custom Name",
+          placeholder: "Enter name...",
+          default: "Default"
+        },
+        {
+          type: "checkbox",
+          id: "enablePower",
+          label: "Enable Power",
+          default: true
+        },
+        {
+          type: "section",
+          text: "Advanced Settings"
+        },
+        {
+          type: "separator"
+        },
+        {
+        type: "textarea",
+        id: "affected_items",
+        label: "Affected Items (one per line)",
+        placeholder: "e.g.\nminecraft:iron\nminecraft:redstone",
+        default: "minecraft:iron\nminecraft:redstone\nminecraft:coal"
+        }
+      ]
+      
+    }

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datapack Forge</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="topbar">
+      <h1>Datapack Forge</h1>
+      <button class="export-btn">Export Datapack</button>
+    </header>
+
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="recipes">Recipes</button>
+      <button class="tab-btn" data-tab="loot">Loot Tables</button>
+      <button class="tab-btn" data-tab="tweaks">Quality of Life</button>
+      <button class="tab-btn" data-tab="players">Players</button>
+      <button class="tab-btn" data-tab="enemies">Enemies</button>
+      <button class="tab-btn" data-tab="other">Other</button>
+    </nav>
+
+    <main>
+      <div id="tab-recipes" class="tab-content active">
+        <div class="content" id="recipes-container"></div>
+      </div>
+
+      <div id="tab-loot" class="tab-content">
+        <div class="content" id="loot-container"></div>
+      </div>
+
+      <div id="tab-tweaks" class="tab-content">
+        <div class="content" id="tweaks-container"></div>
+      </div>
+
+      <div id="tab-players" class="tab-content">
+        <div class="content" id="players-container">
+          <p style="color: #aaa;">Player settings will go here...</p>
+        </div>
+      </div>
+
+      <div id="tab-enemies" class="tab-content">
+        <div class="content" id="enemies-container">
+          <p style="color: #aaa;">Enemy settings will go here...</p>
+        </div>
+      </div>
+
+      <div id="tab-other" class="tab-content">
+        <div class="content" id="other-container">
+          <p style="color: #aaa;">Miscellaneous datapack tweaks can go here...</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2025 Datapack Forge. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <div id="customization-overlay" class="overlay hidden">
+    <div class="overlay-content">
+      <div class="close-overlay-box">
+        <button id="close-overlay">×</button>
+      </div>
+      <div id="customization-title" class="c-title"></div>
+      <p id="customization-description"></p>
+      <div class="overlay-content-nester">
+        <form id="customization-form">
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="perks.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
