@@ -1,3 +1,6 @@
+
+import { perks } from './perks/index.js';
+
 // Dynamically render perk cards
 function renderPerkCard(perk, containerId) {
   const card = document.createElement("section");
@@ -132,7 +135,10 @@ perks.forEach(perk => {
   const container = {
     recipes: "recipes-container",
     loot: "loot-container",
-    tweaks: "tweaks-container"
+    tweaks: "tweaks-container",
+    players: "players-container",
+    enemies: "enemies-container",
+    other: "other-container"
   }[perk.category];
 
   if (container) renderPerkCard(perk, container);
