@@ -526,6 +526,27 @@ button#close-overlay:hover {
   background-color: #162330;
 }
 
+button#reset-overlay {
+  background-color: #0d1b2a;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.4rem;
+  line-height: 1;
+}
+
+button#reset-overlay:hover {
+  background-color: #162330;
+}
+
+
 .c-title {
   font-weight: bolder;
   font-size: larger;

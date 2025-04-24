@@ -178,4 +178,26 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('close-overlay').addEventListener('click', () => {
     document.getElementById('customization-overlay').classList.add('hidden');
   });
+
+  // Close overlay
+  document.getElementById('close-overlay').addEventListener('click', () => {
+    document.getElementById('customization-overlay').classList.add('hidden');
+  });
+
+  // Reset to default
+  document.getElementById('reset-overlay').addEventListener('click', () => {
+    const form = document.getElementById("customization-form");
+    const inputs = form.querySelectorAll("input, textarea");
+    inputs.forEach(input => {
+      if (input.type === "checkbox" || input.type === "radio") {
+        input.checked = input.defaultChecked;
+      } else {
+        input.value = input.defaultValue;
+        if (input.type === "range") {
+          const label = document.getElementById(`${input.id}-value`);
+          if (label) label.textContent = input.defaultValue;
+        }
+      }
+    });
+  });
 });
