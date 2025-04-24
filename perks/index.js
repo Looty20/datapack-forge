@@ -31,8 +31,7 @@ import enderChestPages from './tweaks/ender_chest_pages.js';
 import autoBreeding from './tweaks/auto_breeding.js';
 
 // === Players ===
-import playerCardExample from './players/player_card_example.js';
-import playerHealth from './players/player_health.js';
+import playerAttributes from './players/player_attributes.js';
 
 // === Enemies ===
 import enemyCardExample from './enemies/enemy_card_example.js';
@@ -74,8 +73,7 @@ export const perks = [
   autoBreeding,
 
   // Players
-  playerCardExample,
-  playerHealth,
+  playerAttributes,
 
   // Enemies
   enemyCardExample,

@@ -1,4 +1,3 @@
-
 import { perks } from './perks/index.js';
 
 // Dynamically render perk cards
@@ -9,17 +8,27 @@ function renderPerkCard(perk, containerId) {
 
   const hasSettings = Array.isArray(perk.settings) && perk.settings.length > 0;
 
+  const customizeBtn = document.createElement("button");
+  customizeBtn.className = `customize-btn ${hasSettings ? '' : 'disabled'}`;
+  customizeBtn.textContent = "Details";
+  if (hasSettings) {
+    customizeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      customizePerk(perk.id);
+    });
+  } else {
+    customizeBtn.disabled = true;
+  }
+
   card.innerHTML = `
     <div class="perk-icon"><span>${perk.icon}</span></div>
     <div class="perk-info">
       <h2>${perk.name}</h2>
       <p>${perk.description}</p>
-      <button class="customize-btn ${hasSettings ? '' : 'disabled'}"
-        onclick="event.stopPropagation(); ${hasSettings ? `customizePerk('${perk.id}')` : ''}"
-        ${hasSettings ? '' : 'disabled'}
-      >Details</button>
     </div>
   `;
+
+  card.querySelector(".perk-info").appendChild(customizeBtn);
 
   document.getElementById(containerId).appendChild(card);
 }
@@ -57,7 +66,7 @@ function customizePerk(id) {
           valueLabel.textContent = slider.value;
         });
       });
-    }    
+    }
 
     else if (setting.type === "text") {
       group.innerHTML = `
@@ -78,6 +87,7 @@ function customizePerk(id) {
       `;
       form.appendChild(group);
     }
+
     else if (setting.type === "checkbox") {
       group.innerHTML = `
         <label class="checkbox-wrapper">
@@ -86,7 +96,8 @@ function customizePerk(id) {
         </label>
       `;
       form.appendChild(group);
-    }    
+    }
+
     else if (setting.type === "radio") {
       group.innerHTML = `<label>${setting.label}</label>`;
       setting.options.forEach(opt => {
@@ -128,7 +139,6 @@ function customizePerk(id) {
 
   document.getElementById('customization-overlay').classList.remove('hidden');
 }
-
 
 // Sort and render perks by category
 perks.forEach(perk => {
