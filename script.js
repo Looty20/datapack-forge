@@ -3,24 +3,23 @@ import { perks } from './perks/index.js';
 
 const selectedPerks = new Set();
 const settings = {};
+const perkDefaults = {};
+let currentCustomizationId = null;
 
-// Dynamically render perk cards
 function renderPerkCard(perk, containerId) {
   const card = document.createElement("section");
   card.className = "perk-card";
+  card.dataset.perkId = perk.id;
   card.onclick = () => {
     card.classList.toggle("selected");
-  
     if (card.classList.contains("selected")) {
       selectedPerks.add(perk.id);
     } else {
       selectedPerks.delete(perk.id);
     }
   };
-  
 
   const hasSettings = Array.isArray(perk.settings) && perk.settings.length > 0;
-
   const customizeBtn = document.createElement("button");
   customizeBtn.className = `customize-btn ${hasSettings ? '' : 'disabled'}`;
   customizeBtn.textContent = "Details";
@@ -42,22 +41,19 @@ function renderPerkCard(perk, containerId) {
   `;
 
   card.querySelector(".perk-info").appendChild(customizeBtn);
-
-  if (selectedPerks.has(perk.id)) {
-    card.classList.add("selected");
-  }  
-
+  if (selectedPerks.has(perk.id)) card.classList.add("selected");
   document.getElementById(containerId).appendChild(card);
 }
 
 function customizePerk(id) {
+  currentCustomizationId = id;
   const perk = perks.find(p => p.id === id);
   if (!perk) return;
-
-  // Ensure default values are initialized for accurate change tracking
   if (!settings[id]) settings[id] = {};
+  if (!perkDefaults[id]) perkDefaults[id] = {};
   for (const s of perk.settings || []) {
     if (settings[id][s.id] === undefined) settings[id][s.id] = s.default;
+    if (perkDefaults[id][s.id] === undefined) perkDefaults[id][s.id] = s.default;
   }
 
   const form = document.getElementById("customization-form");
@@ -66,33 +62,27 @@ function customizePerk(id) {
   for (const setting of perk.settings || []) {
     const group = document.createElement("div");
     group.className = "form-group";
-
+    const currentValue = settings[id][setting.id];
     let inputHTML = "";
 
-    const currentValue = settings[id][setting.id];
+    if (["slider", "number", "text", "textarea"].includes(setting.type)) {
+      inputHTML = `<label for="${setting.id}">${setting.label}</label>`;
+    }
 
     if (setting.type === "slider") {
-      const sliderId = `${setting.id}-value`;
-      inputHTML = `
-        <label for="${setting.id}" style="display:flex; justify-content:space-between;">
-          <span>${setting.label}</span>
-          <span id="${sliderId}">${currentValue}</span>
-        </label>
+      inputHTML += `
+        <div style="display:flex; justify-content:space-between;">
+          <span></span><span id="${setting.id}-value">${currentValue}</span>
+        </div>
         <div class="slider-wrapper">
           <input type="range" id="${setting.id}" min="${setting.min}" max="${setting.max}" step="${setting.step}" value="${currentValue}">
         </div>`;
     } else if (setting.type === "number") {
-      inputHTML = `
-        <label for="${setting.id}">${setting.label}</label>
-        <input type="number" id="${setting.id}" value="${currentValue}" min="${setting.min}" max="${setting.max}" step="${setting.step}">`;
+      inputHTML += `<input type="number" id="${setting.id}" value="${currentValue}" min="${setting.min}" max="${setting.max}" step="${setting.step}">`;
     } else if (setting.type === "text") {
-      inputHTML = `
-        <label for="${setting.id}">${setting.label}</label>
-        <input type="text" id="${setting.id}" value="${currentValue}" placeholder="${setting.placeholder || ''}">`;
+      inputHTML += `<input type="text" id="${setting.id}" value="${currentValue}" placeholder="${setting.placeholder || ''}">`;
     } else if (setting.type === "textarea") {
-      inputHTML = `
-        <label for="${setting.id}">${setting.label}</label>
-        <textarea id="${setting.id}" rows="${setting.rows || 4}" placeholder="${setting.placeholder || ''}">${currentValue}</textarea>`;
+      inputHTML += `<textarea id="${setting.id}" rows="${setting.rows || 4}" placeholder="${setting.placeholder || ''}">${currentValue}</textarea>`;
     } else if (setting.type === "checkbox") {
       inputHTML = `
         <label class="checkbox-wrapper">
@@ -100,18 +90,22 @@ function customizePerk(id) {
           <span>${setting.label}</span>
         </label>`;
     } else if (setting.type === "radio") {
-      inputHTML = `<label>${setting.label}</label>` + 
-        setting.options.map(opt => `
+      inputHTML = `<fieldset><legend>${setting.label}</legend>`;
+      inputHTML += setting.options.map(opt => {
+        const checked = (settings[id][setting.id] === opt.value) ? "checked" : "";
+        return `
           <label class="radio-wrapper">
-            <input type="radio" name="${setting.id}" value="${opt.value}" ${opt.value === currentValue ? "checked" : ""}>
+            <input type="radio" name="${setting.id}" value="${opt.value}" ${checked}>
             <span>${opt.label}</span>
-          </label>`).join('');
+          </label>`;
+      }).join('');
+      inputHTML += `</fieldset>`;
     } else if (setting.type === "section") {
-      inputHTML = `<strong style="display:block; margin-top:1em;">${setting.text}</strong>`;
+      inputHTML = `<div data-static="true"><strong style="display:block; margin-top:1em;">${setting.text}</strong></div>`;
     } else if (setting.type === "note") {
-      inputHTML = `<p style="opacity: 0.75; font-size: 0.85rem;">${setting.text}</p>`;
+      inputHTML = `<div data-static="true"><p style="opacity: 0.75; font-size: 0.85rem;">${setting.text}</p></div>`;
     } else if (setting.type === "separator") {
-      inputHTML = `<hr style="border-color: #415a77;">`;
+      inputHTML = `<div data-static="true"><hr style="border-color: #415a77;"></div>`;
     }
 
     group.innerHTML = inputHTML;
@@ -129,15 +123,9 @@ function customizePerk(id) {
   document.getElementById('customization-title').textContent = perk.name;
   document.getElementById('customization-description').textContent = perk.description;
   document.getElementById('customization-overlay').classList.remove('hidden');
-
-  // Set defaults
-  form.querySelectorAll("input[type='text'], input[type='number'], textarea, input[type='range']").forEach(input => {
-    input.defaultValue = input.value;
-  });
-
+  document.querySelectorAll("input, textarea").forEach(input => input.defaultValue = input.value);
 }
 
-// Sort and render perks by category
 perks.forEach(perk => {
   const container = {
     recipes: "recipes-container",
@@ -147,16 +135,68 @@ perks.forEach(perk => {
     enemies: "enemies-container",
     other: "other-container"
   }[perk.category];
-
   if (container) renderPerkCard(perk, container);
 });
 
-// Enable section collapsing by clicking headers
-document.querySelectorAll('.category-header').forEach(header => {
-  header.addEventListener('click', () => {
-    const section = header.closest('.category');
-    section.classList.toggle('collapsed');
+document.getElementById('close-overlay').addEventListener('click', () => {
+  if (!currentCustomizationId) return;
+  const perkId = currentCustomizationId;
+  const form = document.getElementById("customization-form");
+  let changed = false;
+  if (!settings[perkId]) settings[perkId] = {};
+
+  form.querySelectorAll("input, textarea").forEach(input => {
+    const key = input.name || input.id;
+    if (!key) return;
+    let newValue;
+    if (input.type === "checkbox") {
+      newValue = input.checked;
+      if (newValue !== input.defaultChecked) changed = true;
+      settings[perkId][key] = newValue;
+    } else if (input.type === "radio") {
+      if (!input.checked) return;
+      newValue = input.value;
+      if (newValue !== input.defaultValue) changed = true;
+      settings[perkId][key] = newValue;
+    } else {
+      newValue = input.value;
+      if (newValue !== input.defaultValue) changed = true;
+      settings[perkId][key] = input.type === "number" ? Number(newValue) : newValue;
+    }
   });
+
+  if (changed) {
+    const card = document.querySelector(`.perk-card[data-perk-id="${perkId}"]`);
+    if (card && !card.classList.contains("selected")) {
+      card.classList.add("selected");
+      selectedPerks.add(perkId);
+    }
+  }
+
+  document.getElementById('customization-overlay').classList.add('hidden');
+});
+
+document.getElementById('reset-overlay').addEventListener('click', () => {
+  if (!currentCustomizationId) return;
+  const perkId = currentCustomizationId;
+  const form = document.getElementById("customization-form");
+  form.querySelectorAll("input, textarea").forEach(input => {
+    const key = input.name || input.id;
+    if (!key) return;
+    const defaultValue = perkDefaults[perkId]?.[key];
+    if (input.type === "checkbox") {
+      input.checked = !!defaultValue;
+    } else if (input.type === "radio") {
+      input.checked = input.value === defaultValue;
+    } else {
+      input.value = defaultValue;
+      if (input.type === "range") {
+        const label = document.getElementById(`${input.id}-value`);
+        if (label) label.textContent = defaultValue;
+      }
+    }
+  });
+  delete settings[perkId];
 });
 
 document.querySelector(".export-btn").addEventListener("click", async () => {
@@ -164,62 +204,18 @@ document.querySelector(".export-btn").addEventListener("click", async () => {
   exportZip(files);
 });
 
-// Tab switching logic
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
     btn.classList.add('active');
     document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
   });
 });
 
-// Fix: Overlay close button event (after DOM is ready)
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById('close-overlay').addEventListener('click', () => {
-    const perkId = document.getElementById("customization-title").textContent.toLowerCase().replace(/\s+/g, "_");
-    const form = document.getElementById("customization-form");
-
-    if (!settings[perkId]) settings[perkId] = {};
-
-    form.querySelectorAll("input, textarea").forEach(input => {
-      let newValue;
-
-      if (input.type === "checkbox") {
-        newValue = input.checked;
-      } else if (input.type === "radio") {
-        if (!input.checked) return;
-        newValue = input.value;
-      } else {
-        newValue = input.value;
-      }
-
-      const key = input.name || input.id;
-
-      // Simply store without comparison or triggering selection
-      settings[perkId][key] = input.type === "checkbox" ? input.checked :
-                              input.type === "number" ? Number(input.value) :
-                              input.value;
-    });
-
-    document.getElementById('customization-overlay').classList.add('hidden');
-  });
-
-  // Reset to default
-  document.getElementById('reset-overlay').addEventListener('click', () => {
-    const form = document.getElementById("customization-form");
-    const inputs = form.querySelectorAll("input, textarea");
-    inputs.forEach(input => {
-      if (input.type === "checkbox" || input.type === "radio") {
-        input.checked = input.defaultChecked;
-      } else {
-        input.value = input.defaultValue;
-        if (input.type === "range") {
-          const label = document.getElementById(`${input.id}-value`);
-          if (label) label.textContent = input.defaultValue;
-        }
-      }
-    });
+document.querySelectorAll('.category-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const section = header.closest('.category');
+    section.classList.toggle('collapsed');
   });
 });
