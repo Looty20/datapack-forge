@@ -129,6 +129,12 @@ function customizePerk(id) {
   document.getElementById('customization-title').textContent = perk.name;
   document.getElementById('customization-description').textContent = perk.description;
   document.getElementById('customization-overlay').classList.remove('hidden');
+
+  // Set defaults
+  form.querySelectorAll("input[type='text'], input[type='number'], textarea, input[type='range']").forEach(input => {
+    input.defaultValue = input.value;
+  });
+
 }
 
 // Sort and render perks by category
