@@ -101,15 +101,6 @@ export default {
     },
     {
       "type": "slider",
-      "id": "follow_range",
-      "label": "Follow Range",
-      "min": 1,
-      "max": 128,
-      "step": 1,
-      "default": 32
-    },
-    {
-      "type": "slider",
       "id": "flying_speed",
       "label": "Flying Speed",
       "min": 0.01,
@@ -125,6 +116,193 @@ export default {
       "max": 100,
       "step": 1,
       "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "block_break_speed",
+      "label": "Block break speed",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "block_interaction_range",
+      "label": "Block interaction range",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "burning_time",
+      "label": "Burning time",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "entity_interaction_range",
+      "label": "Entity interaction range",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "explosion_knockback_resistance",
+      "label": "Explosion knockback resistance",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "fall_damage_multiplier",
+      "label": "Fall damage multiplier",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "gravity",
+      "label": "Gravity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "jump_strength",
+      "label": "Jump strength",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "mining_efficiency",
+      "label": "Mining efficiency",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "movement_efficiency",
+      "label": "Movement efficiency",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "oxygen_bonus",
+      "label": "Oxygen bonus",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "safe_fall_distance",
+      "label": "Safe fall distance",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "scale",
+      "label": "Scale",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "sneaking_speed",
+      "label": "Sneaking speed",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "step_height",
+      "label": "Step height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "submerged_mining_speed",
+      "label": "Submerged mining speed",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "sweeping_damage_ratio",
+      "label": "Sweeping damage ratio",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "slider",
+      "id": "water_movement_efficiency",
+      "label": "Water movement efficiency",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  files: [
+    {
+      path: "data/namespace/advancement/fj.json",
+      content:`
+      {
+ "criteria": {
+   "requirement": {
+     "trigger": "minecraft:tick"
+   }
+ },
+ "rewards": {
+   "function": "namespace:fj"
+ }
+}
+      `
+    },
+    {
+      path: "data/namespace/function/fj.mcfunction",
+      content: `
+
+# Player Attributes
+attribute @s 
+      `
     }
   ]
 };
