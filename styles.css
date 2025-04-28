@@ -274,6 +274,13 @@ main {
   overflow: hidden;  
 }
 
+/* Perk Cards - Unimplemented */
+.perk-card.unimplemented {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(80%);
+}
+
 .customize-btn {
   align-self: start;
   margin-top: 0.5rem;
@@ -567,3 +574,4 @@ textarea {
   resize: vertical;
   font-family: inherit;
 }
+

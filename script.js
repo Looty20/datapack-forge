@@ -9,8 +9,12 @@ let currentCustomizationId = null;
 function renderPerkCard(perk, containerId) {
   const card = document.createElement("section");
   card.className = "perk-card";
+  if (!perk.files) {
+    card.classList.add("unimplemented");
+  }
   card.dataset.perkId = perk.id;
   card.onclick = () => {
+    if (card.classList.contains("unimplemented")) return;
     card.classList.toggle("selected");
     if (card.classList.contains("selected")) {
       selectedPerks.add(perk.id);
@@ -23,7 +27,7 @@ function renderPerkCard(perk, containerId) {
   const customizeBtn = document.createElement("button");
   customizeBtn.className = `customize-btn ${hasSettings ? '' : 'disabled'}`;
   customizeBtn.textContent = "Details";
-  if (hasSettings) {
+  if (hasSettings && perk.files) {
     customizeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       customizePerk(perk.id);
