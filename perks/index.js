@@ -11,6 +11,7 @@ import craftableCalcite from './recipes/craftable_calcite.js';
 import craftableNotchApple from './recipes/craftable_notch_apple.js';
 import craftableSlimeballs from './recipes/craftable_slimeballs.js';
 import armoredElytra from './recipes/armored_elytra.js';
+import philosophersPickaxe from './recipes/philosophers_pickaxe.js';
 
 // === Loot Tables ===
 import huskDropSand from './loot/husk_drop_sand.js';
@@ -54,6 +55,7 @@ export const perks = [
   craftableNotchApple,
   craftableSlimeballs,
   armoredElytra,
+  philosophersPickaxe,
 
   // Loot
   huskDropSand,
