@@ -55,9 +55,10 @@ function customizePerk(id) {
   if (!perk) return;
   if (!settings[id]) settings[id] = {};
   if (!perkDefaults[id]) perkDefaults[id] = {};
-  for (const s of perk.settings || []) {
-    if (settings[id][s.id] === undefined) settings[id][s.id] = s.default;
-    if (perkDefaults[id][s.id] === undefined) perkDefaults[id][s.id] = s.default;
+
+  for (const setting of perk.settings || []) {
+    if (settings[id][setting.id] === undefined) settings[id][setting.id] = setting.default;
+    if (perkDefaults[id][setting.id] === undefined) perkDefaults[id][setting.id] = setting.default;
   }
 
   const form = document.getElementById("customization-form");
@@ -116,12 +117,12 @@ function customizePerk(id) {
     if (setting.type === "slider") {
       const slider = document.getElementById(setting.id);
       const numberInput = document.getElementById(`${setting.id}-number`);
-    
+
       const sync = (value) => {
         slider.value = value;
         numberInput.value = value;
       };
-    
+
       slider.addEventListener("input", () => sync(slider.value));
       numberInput.addEventListener("input", () => sync(numberInput.value));
     }     
@@ -190,7 +191,14 @@ document.getElementById('reset-overlay').addEventListener('click', () => {
   form.querySelectorAll("input, textarea").forEach(input => {
     const key = input.name || input.id;
     if (!key) return;
-    const defaultValue = perkDefaults[perkId]?.[key];
+    let defaultValue = perkDefaults[perkId]?.[key];
+
+    if (defaultValue === undefined) {
+      const perk = perks.find(p => p.id === perkId);
+      const setting = perk?.settings?.find(s => s.id === key.replace(/-number$/, ''));
+      defaultValue = setting?.default ?? "";
+    }
+
     if (input.type === "checkbox") {
       input.checked = !!defaultValue;
     } else if (input.type === "radio") {
@@ -198,8 +206,12 @@ document.getElementById('reset-overlay').addEventListener('click', () => {
     } else {
       input.value = defaultValue;
       if (input.type === "range") {
-        const label = document.getElementById(`${input.id}-value`);
-        if (label) label.textContent = defaultValue;
+        const numberInput = document.getElementById(`${input.id}-number`);
+        if (numberInput) numberInput.value = defaultValue;
+      } else if (input.type === "number" && input.id.endsWith("-number")) {
+        const sliderId = input.id.replace(/-number$/, '');
+        const sliderInput = document.getElementById(sliderId);
+        if (sliderInput) sliderInput.value = defaultValue;
       }
     }
   });
