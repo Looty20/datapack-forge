@@ -33,7 +33,7 @@ export default {
       "label": "Attack Damage",
       "min": 0,
       "max": 100,
-      "step": 0.5,
+      "step": 1,
       "default": 1
     },
     {
@@ -86,7 +86,7 @@ export default {
       "id": "attack_knockback",
       "label": "Attack Knockback",
       "min": 0,
-      "max": 10,
+      "max": 5,
       "step": 0.1,
       "default": 0
     },
@@ -98,15 +98,6 @@ export default {
       "max": 100,
       "step": 1,
       "default": 0
-    },
-    {
-      "type": "slider",
-      "id": "flying_speed",
-      "label": "Flying Speed",
-      "min": 0.01,
-      "max": 1.0,
-      "step": 0.01,
-      "default": 0.05
     },
     {
       "type": "slider",
@@ -124,16 +115,16 @@ export default {
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 0
+      "default": 1
     },
     {
       "type": "slider",
       "id": "block_interaction_range",
       "label": "Block interaction range",
       "min": 0,
-      "max": 100,
+      "max": 64,
       "step": 1,
-      "default": 0
+      "default": 5
     },
     {
       "type": "slider",
@@ -142,24 +133,24 @@ export default {
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 0
+      "default": 1
     },
     {
       "type": "slider",
       "id": "entity_interaction_range",
       "label": "Entity interaction range",
       "min": 0,
-      "max": 100,
+      "max": 64,
       "step": 1,
-      "default": 0
+      "default": 5
     },
     {
       "type": "slider",
       "id": "explosion_knockback_resistance",
       "label": "Explosion knockback resistance",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 1,
+      "step": 0.05,
       "default": 0
     },
     {
@@ -169,16 +160,16 @@ export default {
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 0
+      "default": 1
     },
     {
       "type": "slider",
       "id": "gravity",
       "label": "Gravity",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "default": 0
+      "min": -5,
+      "max": 5,
+      "step": 0.05,
+      "default": 0.08
     },
     {
       "type": "slider",
@@ -186,8 +177,8 @@ export default {
       "label": "Jump strength",
       "min": 0,
       "max": 100,
-      "step": 1,
-      "default": 0
+      "step": 0.01,
+      "default": 0.42
     },
     {
       "type": "slider",
@@ -222,17 +213,17 @@ export default {
       "label": "Safe fall distance",
       "min": 0,
       "max": 100,
-      "step": 1,
-      "default": 0
+      "step": 0.5,
+      "default": 3
     },
     {
       "type": "slider",
       "id": "scale",
       "label": "Scale",
-      "min": 0,
+      "min": 0.2,
       "max": 100,
-      "step": 1,
-      "default": 0
+      "step": 0.2,
+      "default": 1
     },
     {
       "type": "slider",
@@ -240,8 +231,8 @@ export default {
       "label": "Sneaking speed",
       "min": 0,
       "max": 100,
-      "step": 1,
-      "default": 0
+      "step": 0.1,
+      "default": 0.3
     },
     {
       "type": "slider",
@@ -249,8 +240,8 @@ export default {
       "label": "Step height",
       "min": 0,
       "max": 100,
-      "step": 1,
-      "default": 0
+      "step": 0.1,
+      "default": 0.6
     },
     {
       "type": "slider",
@@ -258,8 +249,8 @@ export default {
       "label": "Submerged mining speed",
       "min": 0,
       "max": 100,
-      "step": 1,
-      "default": 0
+      "step": 0.1,
+      "default": 0.2
     },
     {
       "type": "slider",
@@ -301,7 +292,7 @@ export default {
       content: `
 
 # Player Attributes
-attribute @s 
+attribute @s minecraft:armor base set 10
       `
     }
   ]
