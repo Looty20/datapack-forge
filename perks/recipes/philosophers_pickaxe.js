@@ -51,11 +51,11 @@ export default {
      }
     }
           `
-        },
+        },  
         {
           path: "data/namespace/function/fj.mcfunction",
           content: `
-          recipe give @s minecraft:philosophers_pickaxe
+recipe give @s minecraft:philosophers_pickaxe
           `
         },
         {
