@@ -75,11 +75,9 @@ function customizePerk(id) {
 
     if (setting.type === "slider") {
       inputHTML += `
-        <div style="display:flex; justify-content:space-between;">
-          <span></span><span id="${setting.id}-value">${currentValue}</span>
-        </div>
         <div class="slider-wrapper">
           <input type="range" id="${setting.id}" min="${setting.min}" max="${setting.max}" step="${setting.step}" value="${currentValue}">
+          <input type="number" id="${setting.id}-number" min="${setting.min}" max="${setting.max}" step="${setting.step}" value="${currentValue}" style="width: 4rem; margin-left: 1rem;">
         </div>`;
     } else if (setting.type === "number") {
       inputHTML += `<input type="number" id="${setting.id}" value="${currentValue}" min="${setting.min}" max="${setting.max}" step="${setting.step}">`;
@@ -117,11 +115,16 @@ function customizePerk(id) {
 
     if (setting.type === "slider") {
       const slider = document.getElementById(setting.id);
-      const valueLabel = document.getElementById(`${setting.id}-value`);
-      slider.addEventListener("input", () => {
-        if (valueLabel) valueLabel.textContent = slider.value;
-      });
-    }
+      const numberInput = document.getElementById(`${setting.id}-number`);
+    
+      const sync = (value) => {
+        slider.value = value;
+        numberInput.value = value;
+      };
+    
+      slider.addEventListener("input", () => sync(slider.value));
+      numberInput.addEventListener("input", () => sync(numberInput.value));
+    }     
   }
 
   document.getElementById('customization-title').textContent = perk.name;
