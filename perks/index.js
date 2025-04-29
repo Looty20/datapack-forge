@@ -12,6 +12,7 @@ import craftableNotchApple from './recipes/craftable_notch_apple.js';
 import craftableSlimeballs from './recipes/craftable_slimeballs.js';
 import armoredElytra from './recipes/armored_elytra.js';
 import philosophersPickaxe from './recipes/philosophers_pickaxe.js';
+import invisibleItemFrame from './recipes/invisible_item_frame.js';
 
 // === Loot Tables ===
 import huskDropSand from './loot/husk_drop_sand.js';
@@ -41,6 +42,7 @@ import enemyCardExample from './enemies/enemy_card_example.js';
 import welcomeMessage from './other/welcome_message.js';
 import worldBorder from './other/world_border.js';
 
+
 export const perks = [
   // Recipes
   debugCard,
@@ -56,6 +58,7 @@ export const perks = [
   craftableSlimeballs,
   armoredElytra,
   philosophersPickaxe,
+  invisibleItemFrame,
 
   // Loot
   huskDropSand,

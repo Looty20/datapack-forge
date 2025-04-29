@@ -63,7 +63,8 @@ recipe give @s minecraft:name_tag
   "result": {
     "id": "minecraft:name_tag",
     "count": [nametag_amount]
-  }
+  },
+  "show_notification": false
 }
         `
     }
