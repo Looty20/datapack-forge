@@ -41,10 +41,13 @@ recipe give @s minecraft:armored_elytra
   "material": "minecraft:elytra",
   "result": {
     "id": "minecraft:netherite_chestplate",
-    "count": 1,
     "components": {
-      "glider": {}
-    }
+      "minecraft:glider": {},
+      "minecraft:lore": [
+        "Integrated Elytra"
+      ]
+    },
+    "count": 1
   }
 }
         `
