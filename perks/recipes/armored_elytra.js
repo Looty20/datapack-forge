@@ -4,6 +4,11 @@ export default {
   "description": "Permanently combine an Elytra with a netherite Chestplate. All enchantments and protection levels are retained",
   "icon": "\ud83d\udee1\ufe0f\ud83e\udebd",
   "category": "recipes",
+  "settings": [
+    {
+        "type": "separator"
+    }
+],
   files: [
     {
       path: "data/namespace/advancement/fj.json",
