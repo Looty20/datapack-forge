@@ -42,29 +42,24 @@ export default {
       {
           path: "data/minecraft/recipe/invis_frame.json",
           content: `
-  {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "ingredients": [
-      [
-        "string"
-      ],
-      [
-        "minecraft:iron_ingot"
-      ],
-      [
-        "minecraft:ink_sac",
-        "minecraft:glow_ink_sac"
-      ],
-      [
-        "minecraft:paper"
-      ]
-    ],
-    "result": {
-      "id": "minecraft:name_tag",
-      "count": [nametag_amount]
-    }
+{
+  "type": "minecraft:crafting_transmute",
+  "category": "building",
+  "input": [
+    "minecraft:item_frame"
+  ],
+  "material": "minecraft:glass_pane",
+  "result": {
+    "id": "minecraft:item_frame",
+    "components": {
+      "minecraft:entity_data": {
+        "id": "minecraft:item_frame",
+        "Invisible": true
+      }
+    },
+    "count": [invisible_frame_amount]
   }
+}
           `
       }
     ]
