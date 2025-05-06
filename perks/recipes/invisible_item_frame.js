@@ -55,7 +55,8 @@ export default {
       "minecraft:entity_data": {
         "id": "minecraft:item_frame",
         "Invisible": true
-      }
+      },
+      "minecraft:custom_name": {"italic":false,"text":"Invisible Item Frame"}
     },
     "count": [invisible_frame_amount]
   }
